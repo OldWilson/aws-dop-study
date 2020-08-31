@@ -1,0 +1,23 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  ENV:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: /Lambda/ENV
+  Name: 
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: /Lambda/Name
+Resources: 
+  ListBucketsS3Lambda: 
+      Type: "AWS::Lambda::Function"
+      Properties: 
+        FunctionName: !Sub 'lm-${ENV}-demo'
+        Handler: "index.handler"
+        Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/${ENV}-LambdaExecution"
+        Runtime: "python3.7"
+        Code: 
+          S3Bucket: "dev-cf-demo"
+          S3Key: "lambda-function.zip"
+        Environment: 
+          Variables: 
+            name: !Ref Name

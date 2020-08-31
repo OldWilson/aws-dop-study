@@ -1,0 +1,36 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  ENV:
+    Type: String
+    Default: 'qa1'
+    AllowedValues:
+      - 'qa1'
+      - 'qa2'
+      - 'qa3'
+Resources: 
+  ListBucketsS3Lambda: 
+      Type: "AWS::Lambda::Function"
+      Properties: 
+        FunctionName: !Sub 'lm-${ENV}-demo'
+        Handler: "index.handler"
+        Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/${ENV}-LambdaExecution"
+        Runtime: "python3.7"
+        Code: 
+          S3Bucket: "dev-cf-demo"
+          S3Key: "lambda-function.zip"
+      DependsOn: TestDemo
+  TestDemo:
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      TableName: "demoTable"
+      AttributeDefinitions: 
+        - 
+          AttributeName: "name"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "name"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
