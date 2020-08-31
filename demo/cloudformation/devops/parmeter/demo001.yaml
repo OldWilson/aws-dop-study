@@ -1,0 +1,27 @@
+Parameters:
+  S3BucketParam:
+    Type: String
+    Default: 'dev-cf-demo'
+    AllowedValues:
+      - 'dev-cf-demo'
+  Env:
+    Type: String
+    Default: 'qa1'
+    AllowedValues:
+      - 'qa1'
+      - 'qa2'
+      - 'qa5'
+
+Resources: 
+  ListBucketsS3Lambda: 
+    Type: "AWS::Lambda::Function"
+    Properties: 
+      FunctionName: 'lm-demo-env-paramter'
+      Handler: "index.handler"
+      Role: !Sub
+        - arn:aws:iam::752291562120:role/${env}-LambdaExecution
+        - { env: !Ref Env }
+      Runtime: "python3.7"
+      Code: 
+        S3Bucket: !Ref S3BucketParam
+        S3Key: 'lambda-function.zip'

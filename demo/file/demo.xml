@@ -1,0 +1,14 @@
+<Envelope soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" xmlns:ses="http://sessio.proxy.st24if.tokyo_gas.co.jp/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<Body>
+		<login>
+			<loginReq>
+				<loginId xsi:type="xsd:string">
+					user001
+				</loginId>
+				<password xsi:type="xsd:int">
+					123456
+				</password>
+			</loginReq>
+		</login>
+	</Body>
+</Envelope>
