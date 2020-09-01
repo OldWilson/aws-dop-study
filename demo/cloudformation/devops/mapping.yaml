@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  ENV:
+    Type: 'String'
+    Default: 'qa1'
+    AllowedValues:
+      - 'qa1'
+      - 'qa2'
+      - 'qa3'
+Mappings:
+  envValues:
+    qa1:
+      name: 'qa1-test'
+    qa2:
+      name: 'qa2-test'
+    qa3:
+      name: 'qa3-test'
+Resources: 
+  ListBucketsS3Lambda: 
+      Type: "AWS::Lambda::Function"
+      Properties: 
+        FunctionName: !Sub 'lm-${ENV}-demo'
+        Handler: "index.handler"
+        Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/${ENV}-LambdaExecution"
+        Runtime: "python3.7"
+        Code: 
+          S3Bucket: "dev-cf-demo"
+          S3Key: "lambda-function.zip"
+        Environment: 
+          Variables: 
+            name: !FindInMap [envValues, !Ref 'ENV', name]

@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Parameters:
+  ENV:
+    Type: 'String'
+    Default: 'qa1'
+    AllowedValues:
+      - 'qa1'
+      - 'qa2'
+      - 'qa3'
+Resources: 
+  lmOutputDemo: 
+      Type: "AWS::Lambda::Function"
+      Properties: 
+        FunctionName: !Sub 'lm-${ENV}-output-demo'
+        Handler: "index.handler"
+        Role: !Sub "arn:aws:iam::${AWS::AccountId}:role/${ENV}-LambdaExecution"
+        Runtime: "python3.7"
+        Code: 
+          S3Bucket: "dev-cf-demo"
+          S3Key: "emptyS3.zip"
+Outputs:
+  LambdaArnValue:
+    Description: The ARN of the Lambda function that empties an S3 bucket
+    Value: !GetAtt lmOutputDemo.Arn
+    Export:
+      Name: lmOutputDemo
